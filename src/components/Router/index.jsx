@@ -1,9 +1,10 @@
-import { Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
+import Connexion from '../../Pages/Connexion'
 
 const Router = () => {
   return (
     <Routes >
-      {/* <Route path="/*" element={<Accueil />} /> */}
+      <Route path="/*" element={<Connexion />} />
     </Routes>
   )
 }

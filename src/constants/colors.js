@@ -1,4 +1,4 @@
-export default {
+export const COLORS = {
     black: "rgb(0, 0, 0)",
     richBlack: "rgb(1, 0, 18)",
     taupeGray: "rgb(148, 141, 155)",

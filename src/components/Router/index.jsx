@@ -1,16 +1,19 @@
 import { Route, Routes } from 'react-router-dom'
 import Connexion from '../../Pages/Connexion'
-import ListUsers from '../../Pages/Users'
+import User from '../../Pages/Users'
 
 const Router = () => {
   return (
     <Routes >
       <Route path="/*" element={<Connexion />} />
-      
+
       {
         localStorage.getItem("currentUser") && (
           <>
-            <Route path="/list-users/*" element={<ListUsers />} />
+            <Route
+              path="/users/*"
+              element={<User />}
+            />
           </>
         )
       }

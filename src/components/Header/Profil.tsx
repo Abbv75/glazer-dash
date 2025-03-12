@@ -22,7 +22,7 @@ const Profil = () => {
                 sx={{ fontWeight: 700, cursor: "pointer" }}
             >
                 {currentUser?.nomUser.charAt(0)}
-                {currentUser.prenom && `.${currentUser.prenom.charAt(0)}`}
+                {currentUser?.prenom && `.${currentUser?.prenom.charAt(0)}`}
             </Avatar>
 
             <Collapse

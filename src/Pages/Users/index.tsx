@@ -1,8 +1,7 @@
+import ListUsers from "./list-users"
 
-const ListUsers = () => {
-    return (
-        <div>ListUsers</div>
-    )
+const User = () => {
+    return <ListUsers/>
 }
 
-export default ListUsers
+export default User

@@ -1,10 +1,7 @@
-import { Button, Drawer, Stack, Typography } from "@mui/joy"
+import { ButtonGroup, Drawer, Stack } from "@mui/joy"
 import { CardMedia } from "@mui/material"
 import { IMAGES, ROUTE_URL } from "../../constants"
 import { USE_STATE_T } from "../../types"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons"
-import { Link } from "react-router-dom"
 import NavbarItem from "./NavbarItem"
 
 const Navbar = (
@@ -43,15 +40,16 @@ const Navbar = (
                     }}
                 />
 
-                <Stack
-                    gap={1}
+                <ButtonGroup
+                    orientation="vertical"
+                    variant="soft"
                 >
                     {
                         ROUTE_URL.map((value, index) => (
                             <NavbarItem name={value.name} path={value.path} key={index}/>
                         ))
                     }
-                </Stack>
+                </ButtonGroup>
             </Stack>
         </Drawer>
     )

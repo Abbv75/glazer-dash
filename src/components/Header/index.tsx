@@ -1,19 +1,18 @@
-import { Avatar, Button, Card, Stack, Typography } from '@mui/joy'
-import { CardMedia } from '@mui/material'
-import { COLORS, IMAGES } from '../../constants'
+import { Avatar, Button, Card, Stack, Typography } from '@mui/joy';
+import { CardMedia } from '@mui/material';
+import { COLORS, IMAGES } from '../../constants';
 import FancyText from '@carefully-coded/react-text-gradient';
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect, useMemo, useState } from 'react';
-import { CURRENT_USER } from '../../types';
-import { getCurrentUser } from '../../functions/helpers/getCurrentUser';
+import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import Navbar from '../Navbar';
+import Profil from './Profil';
 
 const Header = () => {
     const navigate = useNavigate();
 
-    const [isNavbarOpened, setisNavbarOpened] = useState(true);
+    const [isNavbarOpened, setisNavbarOpened] = useState(false);
 
     useEffect(
         () => {
@@ -21,11 +20,6 @@ const Header = () => {
         },
         []
     )
-
-    const currentUser = useMemo(
-        () => getCurrentUser(),
-        []
-    );
 
     return (
         <Card
@@ -63,14 +57,9 @@ const Header = () => {
                 direction={"row"}
                 gap={2}
             >
-                <Avatar
-                    sx={{ fontWeight: 700 }}
-                >
-                    {currentUser?.nomUser.charAt(0)}
-                    {currentUser.prenom && `.${currentUser.prenom.charAt(0)}`}
-                </Avatar>
+               <Profil/>
 
-                <Button variant='plain' onClick={()=>setisNavbarOpened(true)}>
+                <Button variant='plain' onClick={() => setisNavbarOpened(true)}>
                     <FontAwesomeIcon icon={faBars} />
                 </Button>
             </Stack>

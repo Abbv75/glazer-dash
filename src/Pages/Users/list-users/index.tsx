@@ -1,23 +1,16 @@
-import { Avatar, Card, Container, Stack, Typography } from "@mui/joy"
+import { Stack } from "@mui/joy"
+import StatistiqueZone from "./StatistiqueZone"
+import GraphZone from "./GraphZone"
 
 const ListUsers = () => {
     return (
-        <Stack p={2}>
-            <Stack
-                direction={"row"}
-            >
-                <Card
-                    sx={{
-                        flexDirection: "row"
-                    }}
-                >
-                    <Avatar size="lg" ></Avatar>
-                    <Stack>
-                        <Typography level="title-lg">15</Typography>
-                        <Typography level="body-sm">Nombre total d'utilisateur</Typography>
-                    </Stack>
-                </Card>
+        <Stack p={2} >
+            <Stack width="50%" gap={10}>
+                <StatistiqueZone />
+
+                <GraphZone />
             </Stack>
+
         </Stack>
     )
 }

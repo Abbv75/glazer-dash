@@ -13,13 +13,8 @@ export const loginUser = async (
                 password
             }
         );
-        console.log('Utilisateur connecté');
-        console.log(data);
-        console.log('====================================');
 
-        localStorage.setItem("currentUser", JSON.stringify(data.user));
-        localStorage.removeItem("isInvite");
-        
+        localStorage.setItem("currentUser", JSON.stringify(data.user));        
         return data.user;
     } catch (error) {
         console.error("Une erreur est survenue lors de l'authentification'", error);

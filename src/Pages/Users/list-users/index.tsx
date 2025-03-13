@@ -1,17 +1,71 @@
-import { Stack } from "@mui/joy"
+import { Grid, Stack } from "@mui/joy"
 import StatistiqueZone from "./StatistiqueZone"
 import GraphZone from "./GraphZone"
+import TableZone from "./TableZone"
+import { USER } from "../../../types"
+import { useEffect, useState } from "react"
+import { getAllUser } from "../../../functions/API/user/getAllUser"
+import { UserContext } from "../../../Providers/UserContext"
 
 const ListUsers = () => {
+    const [data, setdata] = useState([] as USER[]);
+
+    const loadData = async () => {
+        try {
+            const res = await getAllUser();
+            if (!res) {
+                return false
+            }
+
+            setdata(res);
+        } catch (error) { }
+    }
+
+    useEffect(
+        () => {
+            loadData()
+        },
+        []
+    )
+
     return (
-        <Stack p={2} >
-            <Stack width="50%" gap={10}>
-                <StatistiqueZone />
+        <UserContext.Provider
+            value={{
+                userList : data
+            }}
+        >
 
-                <GraphZone />
-            </Stack>
+            <Grid
+                p={5}
+                container
+                spacing={2}
+                width={"100%"}
+            >
+                <Grid
+                    gap={10}
+                    xs={12}
+                    lg={6}
+                >
+                    <Stack
+                        gap={12}
+                    >
+                        <StatistiqueZone />
 
-        </Stack>
+                        <GraphZone />
+                    </Stack>
+                </Grid>
+
+                <Grid
+                    xs={12}
+                    lg={6}
+                >
+                    <TableZone />
+
+                </Grid>
+
+            </Grid>
+        </UserContext.Provider>
+
     )
 }
 

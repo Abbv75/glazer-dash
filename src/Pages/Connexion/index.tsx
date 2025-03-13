@@ -38,7 +38,7 @@ const Connexion = () => {
             
             setloadingState(null);
 
-            navigate("list-users");
+            navigate("users");
 
         } catch (error) {
             setloadingState("Une erreur est survenue");

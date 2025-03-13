@@ -1,5 +1,6 @@
-import { AgChartProps, AgCharts } from 'ag-charts-react'
-import React, { useState } from 'react'
+import { AgCharts } from 'ag-charts-react';
+import { useState } from 'react';
+import { type AgChartOptions } from 'ag-charts-community';
 
 const GraphZone = () => {
     const [options, setOptions] = useState({
@@ -11,9 +12,15 @@ const GraphZone = () => {
             { month: 'Sep', avgTemp: 14.5, iceCreamSales: 950000 },
             { month: 'Nov', avgTemp: 8.9, iceCreamSales: 200000 },
         ],
-        // Series: Defines which chart type and data to use
-        series: [{ type: 'line', xKey: 'month', yKey: 'iceCreamSales' }],
-    } as any);
+        series: [{
+            type: 'line', 
+            xKey: 'month', 
+            yKey: 'iceCreamSales',
+            interpolation : {
+                type : "smooth",
+            }
+        }],
+    } as AgChartOptions);
 
     return (
         <AgCharts style={{

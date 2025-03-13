@@ -5,12 +5,15 @@ export const addUser = async (
     login: string,
     password: string,
     nomUser: string,
+    id_role: number,
+    tel: string,
     prenom?: string,
     email?: string,
-    tel?: string,
+    adresse?: string,
+    whatsapp?: string,
 ) => {
     try {
-        const { data } : {data : USER} = await axiosInstance.post(
+        const { data }: { data: USER } = await axiosInstance.post(
             `/users/addUser`,
             {
                 nomUser,
@@ -19,14 +22,15 @@ export const addUser = async (
                 tel,
                 login,
                 password,
-                id_role: 3,
+                id_role,
+                adresse,
+                whatsapp
             }
         );
         console.log('Utilisateur inscrit');
         console.log(data);
         console.log('====================================');
 
-        localStorage.setItem("currentUser", JSON.stringify(data));
         return data;
     } catch (error) {
         console.error("Une erreur est survenue lors de l'inscription'", error);

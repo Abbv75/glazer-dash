@@ -1,10 +1,14 @@
-import { Button, Card, Divider, FormControl, FormLabel, Grid, Input, Option, Select, Stack, Typography } from "@mui/joy";
+import { Button, Card, FormControl, FormLabel, Grid, Input, Option, Select, Stack } from "@mui/joy";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faLocationArrow, faLock, faPaperPlane, faPhone, faTimes, faUserAstronaut } from "@fortawesome/free-solid-svg-icons";
 import TitleElement from "./TitleElement";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import { Collapse } from "@mui/material";
-import { USE_STATE_T } from "../../../../../types";
+import { LOADING_STATE_T, USE_STATE_T } from "../../../../../types";
+import { useContext, useState } from "react";
+import { addUser } from "../../../../../functions/API/user/addUser";
+import { toast } from "react-toastify";
+import { UserContext } from "../../../../../Providers/UserContext";
 
 const FormZone = (
     {
@@ -16,13 +20,70 @@ const FormZone = (
         setShow: USE_STATE_T
     }
 ) => {
+    const [loadingState, setloadingState] = useState(null as LOADING_STATE_T);
+    const [info, setinfo] = useState({
+        nomUser: undefined as undefined | string,
+        prenom: undefined as undefined | string,
+        login: undefined as undefined | string,
+        password: undefined as undefined | string,
+        id_role: 1,
+    });
+
+    const [contact, setcontact] = useState({
+        tel: undefined as undefined | string,
+        email: undefined as undefined | string,
+        whatsapp: undefined as undefined | string,
+        adresse: undefined as undefined | string,
+    });
+
+    const { loadData } = useContext(UserContext)
+
+    const onsubmit = async (e: any) => {
+        try {
+            e.preventDefault();
+            setloadingState("En cours de chargement")
+
+            const {
+                login,
+                password,
+                nomUser,
+                prenom,
+                email,
+                tel,
+                id_role,
+                adresse,
+                whatsapp
+            } = { ...info, ...contact };
+
+            if (!login || !password || !nomUser || !tel || !id_role) {
+                toast.error("Veuillez saisir les champs obligatoires");
+                setloadingState(null);
+                return false;
+            }
+
+            const res = await addUser(login, password, nomUser, id_role, tel, prenom, email, adresse, whatsapp);
+
+            if (!res) {
+                setloadingState("Chargement finit");
+                toast.info("Ajout non effectuée")
+            }
+
+            toast.success("Ajout effectuée");
+            loadData();
+            setloadingState("Chargement reussit");
+        } catch (error) {
+            toast.error("Une erreur est survenue lors de l'ajout de l'utilisateur")
+            setloadingState("Une erreur est survenue");
+        }
+    }
+
     return (
         <Collapse
             in={show}
             sx={{
                 alignSelf: "flex-end",
-                position: "absolute",
-                mt: 16,
+                position: window.innerWidth > 800 ? "absolute" : "initial",
+                mt: window.innerWidth > 800 ? 16 : 0,
                 zIndex: 2
             }}
             unmountOnExit
@@ -36,6 +97,7 @@ const FormZone = (
                 }}
                 variant="outlined"
                 component={"form"}
+                onSubmit={onsubmit}
             >
                 <TitleElement title="Informations du compte" />
 
@@ -49,7 +111,14 @@ const FormZone = (
                     >
                         <FormControl>
                             <FormLabel>Nom</FormLabel>
-                            <Input />
+                            <Input
+                                value={info.nomUser}
+                                onChange={({ target }) => setinfo({
+                                    ...info,
+                                    nomUser: target.value
+                                })}
+
+                            />
                         </FormControl>
                     </Grid>
 
@@ -59,7 +128,14 @@ const FormZone = (
                     >
                         <FormControl>
                             <FormLabel>Prenom</FormLabel>
-                            <Input />
+                            <Input
+                                value={info.prenom}
+                                onChange={({ target }) => setinfo({
+                                    ...info,
+                                    prenom: target.value
+                                })}
+
+                            />
                         </FormControl>
                     </Grid>
 
@@ -73,6 +149,11 @@ const FormZone = (
                                 startDecorator={
                                     <FontAwesomeIcon icon={faUserAstronaut} />
                                 }
+                                value={info.login}
+                                onChange={({ target }) => setinfo({
+                                    ...info,
+                                    login: target.value
+                                })}
                             />
                         </FormControl>
                     </Grid>
@@ -87,6 +168,11 @@ const FormZone = (
                                 startDecorator={
                                     <FontAwesomeIcon icon={faLock} />
                                 }
+                                value={info.password}
+                                onChange={({ target }) => setinfo({
+                                    ...info,
+                                    password: target.value
+                                })}
                             />
                         </FormControl>
                     </Grid>
@@ -96,9 +182,15 @@ const FormZone = (
                     >
                         <FormControl>
                             <FormLabel>Role</FormLabel>
-                            <Select defaultValue={1}>
+                            <Select
+                                value={info.id_role}
+                                onChange={(e, value) => setinfo({
+                                    ...info,
+                                    id_role: value || 1
+                                })}
+                            >
                                 <Option value={1}>Administrateur</Option>
-                                <Option value={1}>Auditeur</Option>
+                                <Option value={2}>Auditeur</Option>
                             </Select>
                         </FormControl>
                     </Grid>
@@ -121,6 +213,11 @@ const FormZone = (
                                 startDecorator={
                                     <FontAwesomeIcon icon={faPhone} />
                                 }
+                                value={contact.tel}
+                                onChange={({ target }) => setcontact({
+                                    ...contact,
+                                    tel: target.value
+                                })}
                             />
                         </FormControl>
                     </Grid>
@@ -135,6 +232,11 @@ const FormZone = (
                                 startDecorator={
                                     <FontAwesomeIcon icon={faEnvelope} />
                                 }
+                                value={contact.email}
+                                onChange={({ target }) => setcontact({
+                                    ...contact,
+                                    email: target.value
+                                })}
                             />
                         </FormControl>
                     </Grid>
@@ -149,6 +251,11 @@ const FormZone = (
                                 startDecorator={
                                     <FontAwesomeIcon icon={faWhatsapp} />
                                 }
+                                value={contact.whatsapp}
+                                onChange={({ target }) => setcontact({
+                                    ...contact,
+                                    whatsapp: target.value
+                                })}
                             />
                         </FormControl>
                     </Grid>
@@ -163,6 +270,11 @@ const FormZone = (
                                 startDecorator={
                                     <FontAwesomeIcon icon={faLocationArrow} />
                                 }
+                                value={contact.adresse}
+                                onChange={({ target }) => setcontact({
+                                    ...contact,
+                                    adresse: target.value
+                                })}
                             />
                         </FormControl>
                     </Grid>
@@ -180,13 +292,19 @@ const FormZone = (
                         startDecorator={
                             <FontAwesomeIcon icon={faTimes} />
                         }
+                        type="reset"
+                        onClick={() => {
+                            setShow(false)
+                        }}
                     >Annuler l'ajout</Button>
                     <Button
                         fullWidth
                         endDecorator={
                             <FontAwesomeIcon icon={faPaperPlane} />
                         }
-                    >Confirmer l'ajout</Button>
+                        type="submit"
+                        loading={loadingState == "En cours de chargement"}
+                    >Ajouter</Button>
                 </Stack>
             </Card>
         </Collapse>

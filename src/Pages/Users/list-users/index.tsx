@@ -31,14 +31,15 @@ const ListUsers = () => {
     return (
         <UserContext.Provider
             value={{
-                userList : data
+                userList: data,
+                loadData
             }}
         >
 
             <Grid
                 p={5}
                 container
-                spacing={2}
+                // spacing={2}
                 width={"100%"}
             >
                 <Grid

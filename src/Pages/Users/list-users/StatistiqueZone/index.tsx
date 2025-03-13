@@ -11,7 +11,7 @@ const StatistiqueZone = () => {
             container
             spacing={2}
             sx={{
-                minWidth: 350
+                // minWidth: 350
             }}
         >
             <Grid xs={12} md={6} lg={4}>
@@ -19,11 +19,11 @@ const StatistiqueZone = () => {
             </Grid>
 
             <Grid xs={12} md={6} lg={4}>
-                <StatistiqueCard label="Nombre total d'auteur" value={userList.filter(u=>u.id_role == 3).length} />
+                <StatistiqueCard label="Nombre d'auteur" value={userList.filter(u=>u.id_role == 3).length} />
             </Grid>
 
             <Grid xs={12} md={6} lg={4}>
-                <StatistiqueCard label="Nombre total d'administrateur" value={userList.filter(u=>u.id_role == 1).length} />
+                <StatistiqueCard label="Nombre d'administrateur" value={userList.filter(u=>u.id_role == 1).length} />
             </Grid>
         </Grid>
     )

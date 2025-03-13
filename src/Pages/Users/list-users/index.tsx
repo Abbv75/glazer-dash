@@ -47,7 +47,7 @@ const ListUsers = () => {
                     lg={6}
                 >
                     <Stack
-                        gap={12}
+                        gap={"5vh"}
                     >
                         <StatistiqueZone />
 

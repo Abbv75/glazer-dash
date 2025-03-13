@@ -1,12 +1,15 @@
-import { Avatar, Button, ButtonGroup, Divider, Stack, Tooltip, Typography } from "@mui/joy";
+import { Avatar, Button, ButtonGroup, Divider, Input, Stack, Tooltip, Typography } from "@mui/joy";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { UserContext } from "../../../../Providers/UserContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faContactBook, faFeatherPointed, faTrashArrowUp } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faContactBook, faFeatherPointed, faPlusCircle, faSearch, faTrashArrowUp } from "@fortawesome/free-solid-svg-icons";
+import FormZone from "./FormZone/FormZone";
 
 const TableZone = () => {
     const { userList } = useContext(UserContext);
+    const [search, setSearch] = useState(undefined as undefined | string);
+    const [showFormZone, setshowFormZone] = useState(false);
 
     return (
         <Stack
@@ -22,7 +25,42 @@ const TableZone = () => {
                 }}
             />
 
+            <Stack
+                direction={"row"}
+                gap={2}
+            >
+                <Input
+                    endDecorator={
+                        <FontAwesomeIcon icon={faSearch} />
+                    }
+                    fullWidth
+                    placeholder="Rechercher un utilisateur"
+                    value={search}
+                    onChange={({ target }) => setSearch(target.value)}
+                />
+
+                <Divider orientation="vertical" />
+
+                <Button
+                    endDecorator={
+                        <FontAwesomeIcon icon={!showFormZone ? faPlusCircle : faArrowRight} />
+                    }
+                    onClick={() => setshowFormZone(!showFormZone)}
+                    color={!showFormZone ? "primary" : "danger"}
+                >
+                    {
+                        !showFormZone ? "Ajouter" : "Annuler"
+                    }
+                </Button>
+            </Stack>
+
+            <FormZone
+                show={showFormZone}
+                setShow={setshowFormZone}
+            />
+
             <TableContainer>
+
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -36,7 +74,15 @@ const TableZone = () => {
 
                     <TableBody>
                         {
-                            userList.map((value, idnex) => (
+                            userList.filter(
+                                (user) => (
+                                    !search ? true
+                                        : user.nomUser.toLowerCase().includes(search.toLowerCase())
+                                        || user.prenom?.toLowerCase().includes(search.toLowerCase())
+                                        || user?.contact?.email?.toLowerCase().includes(search.toLowerCase())
+                                        || user?.contact?.tel.toLowerCase().includes(search.toLowerCase())
+                                )
+                            ).map((value, idnex) => (
                                 <TableRow key={idnex}>
                                     <Tooltip
                                         title={value.login}

@@ -5,16 +5,50 @@ import { UserContext } from "../../../../Providers/UserContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faContactBook, faFeatherPointed, faPlusCircle, faSearch, faTrashArrowUp } from "@fortawesome/free-solid-svg-icons";
 import FormZone from "./FormZone/FormZone";
+import CustomDeleteModal from "../../../../components/CustomDeleteModal";
+import { toast } from "react-toastify";
+import { deleteUser } from "../../../../functions/API/user/deleteUser";
+import { LOADING_STATE_T } from "../../../../types";
 
 const TableZone = () => {
-    const { userList } = useContext(UserContext);
+    const { userList, setSelectedUser, loadData, selectedUser } = useContext(UserContext);
     const [search, setSearch] = useState(undefined as undefined | string);
     const [showFormZone, setshowFormZone] = useState(false);
+    const [showDeleteModal, setshowDeleteModal] = useState(false);
+    const [loadingState, setloadingState] = useState(null as LOADING_STATE_T);
+
+    const handleDelete = async () => {
+        try {
+            setshowDeleteModal(false);
+            if (!selectedUser) {
+                toast.info("Veuillez selectionner un utilisateur d'abord");
+                return;
+            }
+            setloadingState("En cours de chargement");
+
+            const res = await deleteUser(selectedUser.id);
+
+            toast.success("Utilisateur supprimé avec succès");
+            setloadingState(null);
+            setSelectedUser(undefined);
+            loadData();
+
+        } catch (error) {
+            toast.error("Erreur lors de la suppression de l'utilisateur");
+            setloadingState("Une erreur est survenue");
+        }
+    }
 
     return (
         <Stack
             gap={2}
         >
+            <CustomDeleteModal
+                open={showDeleteModal}
+                setopen={setshowDeleteModal}
+                onValidate={handleDelete}
+            />
+
             <Typography level="h2">Gestion des utilisateurs</Typography>
 
             <Divider
@@ -122,6 +156,11 @@ const TableZone = () => {
                                                             <FontAwesomeIcon icon={faTrashArrowUp} />
                                                         }
                                                         color="danger"
+                                                        onClick={() => {
+                                                            setshowDeleteModal(true);
+                                                            setSelectedUser(value);
+                                                        }}
+                                                        loading={value == selectedUser && loadingState == "En cours de chargement"}
                                                     >Del...</Button>
                                                 </Tooltip>
                                             </ButtonGroup>

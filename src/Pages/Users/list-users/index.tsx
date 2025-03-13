@@ -9,6 +9,7 @@ import { UserContext } from "../../../Providers/UserContext"
 
 const ListUsers = () => {
     const [data, setdata] = useState([] as USER[]);
+    const [selectedUser, setSelectedUser] = useState(undefined as undefined | USER);
 
     const loadData = async () => {
         try {
@@ -32,14 +33,16 @@ const ListUsers = () => {
         <UserContext.Provider
             value={{
                 userList: data,
-                loadData
+                loadData,
+                selectedUser,
+                setSelectedUser
             }}
         >
 
             <Grid
                 p={5}
                 container
-                // spacing={2}
+                spacing={2}
                 width={"100%"}
             >
                 <Grid
@@ -65,6 +68,8 @@ const ListUsers = () => {
                 </Grid>
 
             </Grid>
+
+
         </UserContext.Provider>
 
     )

@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import Navbar from '../Navbar';
 import Profil from './Profil';
+import { HeaderContext } from '../../Providers/HeaderContext';
 
 const Header = () => {
     const navigate = useNavigate();
@@ -22,50 +23,59 @@ const Header = () => {
     )
 
     return (
-        <Card
-            sx={{
-                borderRadius: 0,
-                p: 1,
-                flexDirection: "row",
-                justifyContent: "space-between"
+        <HeaderContext.Provider
+            value={{
+                isNavbarOpened,
+                setisNavbarOpened,
+                navigate
             }}
         >
-            <Link to={"/"}>
+            <Card
+                sx={{
+                    borderRadius: 0,
+                    p: 1,
+                    flexDirection: "row",
+                    justifyContent: "space-between"
+                }}
+            >
+                <Link to={"/"}>
+                    <Stack
+                        direction={"row"}
+                        gap={2}
+                        alignItems={"center"}
+                    >
+                        <Avatar>
+                            <CardMedia
+                                src={IMAGES.logo}
+                                component={"img"}
+                            />
+                        </Avatar>
+
+                        <FancyText
+                            gradient={{ from: COLORS.plumWeb, to: COLORS.richBlack, type: 'linear' }}
+                            animateTo={{ from: COLORS.africanViolet, to: COLORS.indianRed }}
+                            animateDuration={2000}
+                        >
+                            <Typography level='h4' textColor={COLORS.africanViolet}>Kora Music</Typography>
+                        </FancyText>
+                    </Stack>
+                </Link>
+
                 <Stack
                     direction={"row"}
                     gap={2}
-                    alignItems={"center"}
                 >
-                    <Avatar>
-                        <CardMedia
-                            src={IMAGES.logo}
-                            component={"img"}
-                        />
-                    </Avatar>
+                    <Profil />
 
-                    <FancyText
-                        gradient={{ from: COLORS.plumWeb, to: COLORS.richBlack, type: 'linear' }}
-                        animateTo={{ from: COLORS.africanViolet, to: COLORS.indianRed }}
-                        animateDuration={2000}
-                    >
-                        <Typography level='h4' textColor={COLORS.africanViolet}>Kora Music</Typography>
-                    </FancyText>
+                    <Button variant='plain' onClick={() => setisNavbarOpened(true)}>
+                        <FontAwesomeIcon icon={faBars} />
+                    </Button>
                 </Stack>
-            </Link>
 
-            <Stack
-                direction={"row"}
-                gap={2}
-            >
-               <Profil/>
+                <Navbar isOpen={isNavbarOpened} setisOpen={setisNavbarOpened} />
+            </Card>
+        </HeaderContext.Provider>
 
-                <Button variant='plain' onClick={() => setisNavbarOpened(true)}>
-                    <FontAwesomeIcon icon={faBars} />
-                </Button>
-            </Stack>
-
-            <Navbar isOpen={isNavbarOpened} setisOpen={setisNavbarOpened} />
-        </Card>
     )
 }
 

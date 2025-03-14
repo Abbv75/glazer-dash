@@ -21,7 +21,7 @@ const Navbar = (
                 content: {
                     sx: {
                         width: "fit-content",
-                        minWidth : 300
+                        minWidth: 300
                     }
                 }
             }}
@@ -46,7 +46,12 @@ const Navbar = (
                 >
                     {
                         ROUTE_URL.map((value, index) => (
-                            <NavbarItem name={value.name} path={value.path} key={index}/>
+                            <NavbarItem
+                                name={value.name}
+                                path={value.path}
+                                icon={value.icon}
+                                key={index}
+                            />
                         ))
                     }
                 </ButtonGroup>

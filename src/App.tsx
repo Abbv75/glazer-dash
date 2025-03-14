@@ -1,6 +1,6 @@
 import "@fontsource/ubuntu"
 import "@fontsource/poppins"
-import Router from './components/Router'
+import Router from './Router'
 import { BrowserRouter } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
 import Header from "./components/Header"

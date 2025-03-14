@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
-import Connexion from '../../Pages/Connexion'
-import User from '../../Pages/Users'
+import Connexion from '../Pages/Connexion'
+import User from '../Pages/Users'
+import Parametrage from '../Pages/Parametrage'
 
 const Router = () => {
   return (
@@ -13,6 +14,10 @@ const Router = () => {
             <Route
               path="/users/*"
               element={<User />}
+            />
+            <Route
+              path="/parametrage/*"
+              element={<Parametrage />}
             />
           </>
         )

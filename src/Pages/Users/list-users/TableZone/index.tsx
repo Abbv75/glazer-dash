@@ -1,14 +1,15 @@
-import { Avatar, Button, ButtonGroup, Divider, Input, Stack, Tooltip, Typography } from "@mui/joy";
+import { Avatar, Button, ButtonGroup, Divider, Dropdown, Input, Menu, MenuButton, MenuItem, Stack, Tooltip, Typography } from "@mui/joy";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../../../Providers/UserContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight, faContactBook, faFeatherPointed, faPlusCircle, faSearch, faTrashArrowUp } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faContactBook, faFeatherPointed, faPhone, faPlusCircle, faSearch, faTrashArrowUp } from "@fortawesome/free-solid-svg-icons";
 import FormZone from "./FormZone/FormZone";
 import CustomDeleteModal from "../../../../components/CustomDeleteModal";
 import { toast } from "react-toastify";
 import { deleteUser } from "../../../../functions/API/user/deleteUser";
 import { LOADING_STATE_T } from "../../../../types";
+import ContactItem from "./ContactItem";
 
 const TableZone = () => {
     const { userList, setSelectedUser, loadData, selectedUser } = useContext(UserContext);
@@ -38,6 +39,13 @@ const TableZone = () => {
             setloadingState("Une erreur est survenue");
         }
     }
+
+    useEffect(
+        () => {
+            !showFormZone && setSelectedUser(undefined);
+        },
+        [showFormZone]
+    )
 
     return (
         <Stack
@@ -138,15 +146,28 @@ const TableZone = () => {
                                             direction={"row"}
                                             gap={1}
                                         >
-                                            <Button variant="soft">
-                                                <FontAwesomeIcon icon={faContactBook} />
-                                            </Button>
+                                            {
+                                                value.contact && (
+                                                    <ContactItem
+                                                        tel={value.contact?.tel}
+                                                        adresse={value.contact?.address || undefined}
+                                                        email={value.contact?.email || undefined}
+                                                        whatsapp={value.contact?.whatsapp || undefined}
+                                                    />
+                                                )
+                                            }
+
+
                                             <ButtonGroup>
                                                 <Tooltip title="Modifier">
                                                     <Button
                                                         startDecorator={
                                                             <FontAwesomeIcon icon={faFeatherPointed} />
                                                         }
+                                                        onClick={() => {
+                                                            setSelectedUser(value);
+                                                            setshowFormZone(true);
+                                                        }}
                                                     >Mod...</Button>
                                                 </Tooltip>
 

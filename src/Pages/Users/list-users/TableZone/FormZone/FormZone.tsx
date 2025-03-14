@@ -4,11 +4,12 @@ import { faEnvelope, faLocationArrow, faLock, faPaperPlane, faPhone, faTimes, fa
 import TitleElement from "./TitleElement";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import { Collapse } from "@mui/material";
-import { LOADING_STATE_T, USE_STATE_T } from "../../../../../types";
-import { useContext, useState } from "react";
+import { LOADING_STATE_T, USE_STATE_T, USER } from "../../../../../types";
+import { useContext, useEffect, useState } from "react";
 import { addUser } from "../../../../../functions/API/user/addUser";
 import { toast } from "react-toastify";
 import { UserContext } from "../../../../../Providers/UserContext";
+import { editUser } from "../../../../../functions/API/user/editUser";
 
 const FormZone = (
     {
@@ -36,7 +37,31 @@ const FormZone = (
         adresse: undefined as undefined | string,
     });
 
-    const { loadData } = useContext(UserContext)
+    const { loadData, selectedUser, setSelectedUser } = useContext(UserContext);
+
+    useEffect(
+        () => {
+            if (selectedUser) {
+                setinfo({
+                    nomUser: selectedUser.nomUser,
+                    login: selectedUser.login,
+                    id_role: selectedUser.role.id,
+                    password: undefined,
+                    prenom: selectedUser.prenom || undefined
+                });
+
+                if (selectedUser.contact) {
+                    setcontact({
+                        adresse: selectedUser.contact?.address || undefined,
+                        email: selectedUser.contact?.email || undefined,
+                        whatsapp: selectedUser.contact?.whatsapp || undefined,
+                        tel: selectedUser.contact.tel,
+                    })
+                }
+            }
+        },
+        [selectedUser]
+    )
 
     const onsubmit = async (e: any) => {
         try {
@@ -55,24 +80,35 @@ const FormZone = (
                 whatsapp
             } = { ...info, ...contact };
 
-            if (!login || !password || !nomUser || !tel || !id_role) {
-                toast.error("Veuillez saisir les champs obligatoires");
-                setloadingState(null);
-                return false;
-            }
+            let res: false | USER = false;
 
-            const res = await addUser(login, password, nomUser, id_role, tel, prenom, email, adresse, whatsapp);
+            if (!selectedUser) {
+                if (!login || !password || !nomUser || !tel || !id_role) {
+                    toast.error("Veuillez saisir les champs obligatoires");
+                    setloadingState(null);
+                    return false;
+                }
+
+                res = await addUser(login, password, nomUser, id_role, tel, prenom, email, adresse, whatsapp);
+            }
+            else {
+                res = await editUser(selectedUser.id, { ...info, ...contact });
+            }
 
             if (!res) {
                 setloadingState("Chargement finit");
                 toast.info("Ajout non effectuée")
             }
 
-            toast.success("Ajout effectuée");
+            toast.success("Traitement effectuée");
             loadData();
+
+            setSelectedUser(undefined);
+            setShow(false);
+
             setloadingState("Chargement reussit");
         } catch (error) {
-            toast.error("Une erreur est survenue lors de l'ajout de l'utilisateur")
+            toast.error("Une erreur est survenue lors de l'action sur l'utilisateur")
             setloadingState("Une erreur est survenue");
         }
     }
@@ -296,7 +332,7 @@ const FormZone = (
                         onClick={() => {
                             setShow(false)
                         }}
-                    >Annuler l'ajout</Button>
+                    >Annuler</Button>
                     <Button
                         fullWidth
                         endDecorator={
@@ -304,7 +340,7 @@ const FormZone = (
                         }
                         type="submit"
                         loading={loadingState == "En cours de chargement"}
-                    >Ajouter</Button>
+                    >Valider</Button>
                 </Stack>
             </Card>
         </Collapse>
